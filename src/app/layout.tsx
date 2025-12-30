@@ -1,5 +1,9 @@
 import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import { SiteHeader } from '@/components/layout/site-header'
 import './globals.css'
+
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'EcoSwap - Sustainable Shopping Platform',
@@ -16,9 +20,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="min-h-screen bg-gray-50 antialiased">
-        <div id="root">
-          {children}
+      <body className={`${inter.className} min-h-screen bg-secondary-50 antialiased`}>
+        <div className="relative flex min-h-screen flex-col">
+          <SiteHeader />
+          <main className="flex-1">
+            {children}
+          </main>
         </div>
       </body>
     </html>
