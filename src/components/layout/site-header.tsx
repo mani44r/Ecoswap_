@@ -2,10 +2,23 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
+import { useAuth } from '@/hooks/use-auth'
 
 export function SiteHeader() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const { user, logout } = useAuth()
+  const router = useRouter()
+
+  const handleSignOut = async () => {
+    try {
+      await logout()
+      router.push('/')
+    } catch (error) {
+      console.error('Sign out error:', error)
+    }
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-secondary-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
@@ -42,12 +55,34 @@ export function SiteHeader() {
 
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center space-x-4">
-          <Button variant="ghost" size="sm">
-            Sign In
-          </Button>
-          <Button size="sm">
-            Get Started
-          </Button>
+          {user ? (
+            <>
+              <span className="text-sm text-secondary-600">
+                Welcome, {user.displayName || user.email}
+              </span>
+              <Button variant="ghost" size="sm" onClick={handleSignOut}>
+                Sign Out
+              </Button>
+              <Link href="/dashboard">
+                <Button size="sm">
+                  Dashboard
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link href="/auth/signin">
+                <Button variant="ghost" size="sm">
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/auth/signup">
+                <Button size="sm">
+                  Get Started
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -107,12 +142,34 @@ export function SiteHeader() {
               Sustainability
             </Link>
             <div className="pt-4 border-t border-secondary-200 space-y-2">
-              <Button variant="ghost" size="sm" className="w-full justify-start">
-                Sign In
-              </Button>
-              <Button size="sm" className="w-full">
-                Get Started
-              </Button>
+              {user ? (
+                <>
+                  <p className="text-sm text-secondary-600 px-2">
+                    Welcome, {user.displayName || user.email}
+                  </p>
+                  <Link href="/dashboard">
+                    <Button size="sm" className="w-full">
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <Button variant="ghost" size="sm" className="w-full justify-start" onClick={handleSignOut}>
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link href="/auth/signin">
+                    <Button variant="ghost" size="sm" className="w-full justify-start">
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link href="/auth/signup">
+                    <Button size="sm" className="w-full">
+                      Get Started
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
