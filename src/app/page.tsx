@@ -1,7 +1,12 @@
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { ProductGrid } from '@/components/product/product-grid'
+import { mockProducts, getTopSustainableProducts } from '@/lib/data/mock-products'
 
 export default function HomePage() {
+  const featuredProducts = getTopSustainableProducts(4)
+
   return (
     <div className="bg-gradient-eco">
       {/* Hero Section */}
@@ -17,12 +22,16 @@ export default function HomePage() {
             for making sustainable choices. Building a greener future, one purchase at a time.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="text-base">
-              Start Shopping Sustainably
-            </Button>
-            <Button variant="outline" size="lg" className="text-base">
-              Learn More
-            </Button>
+            <Link href="/products">
+              <Button size="lg" className="text-base">
+                Start Shopping Sustainably
+              </Button>
+            </Link>
+            <Link href="/about">
+              <Button variant="outline" size="lg" className="text-base">
+                Learn More
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -77,6 +86,34 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Featured Products Section */}
+      <section className="container py-16">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-secondary-900 mb-4">
+            Featured Sustainable Products
+          </h2>
+          <p className="text-lg text-secondary-600 max-w-2xl mx-auto">
+            Discover our top-rated eco-friendly products with the highest sustainability scores
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <ProductGrid
+            products={featuredProducts}
+            showFilters={false}
+            showSearch={false}
+          />
+        </div>
+
+        <div className="text-center">
+          <Link href="/products">
+            <Button size="lg" variant="outline">
+              View All Products
+            </Button>
+          </Link>
+        </div>
+      </section>
+
       {/* Stats Section */}
       <section className="container py-16">
         <Card className="text-center">
@@ -86,19 +123,23 @@ export default function HomePage() {
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div>
-                <div className="text-3xl font-bold text-primary-600 mb-2">🚧</div>
-                <div className="text-sm text-secondary-600">Products Analyzed</div>
-                <div className="text-xs text-secondary-500 mt-1">Coming Soon</div>
+                <div className="text-3xl font-bold text-primary-600 mb-2">{mockProducts.length}+</div>
+                <div className="text-sm text-secondary-600">Sustainable Products</div>
+                <div className="text-xs text-secondary-500 mt-1">Curated for you</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-primary-600 mb-2">🚧</div>
-                <div className="text-sm text-secondary-600">CO₂ Saved</div>
-                <div className="text-xs text-secondary-500 mt-1">In Development</div>
+                <div className="text-3xl font-bold text-primary-600 mb-2">
+                  {Math.round(mockProducts.reduce((sum, p) => sum + p.sustainabilityScore, 0) / mockProducts.length)}%
+                </div>
+                <div className="text-sm text-secondary-600">Avg. Sustainability Score</div>
+                <div className="text-xs text-secondary-500 mt-1">Above industry standard</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-primary-600 mb-2">🚧</div>
-                <div className="text-sm text-secondary-600">Active Users</div>
-                <div className="text-xs text-secondary-500 mt-1">Building MVP</div>
+                <div className="text-3xl font-bold text-primary-600 mb-2">
+                  {mockProducts.filter(p => p.isOrganic).length}
+                </div>
+                <div className="text-sm text-secondary-600">Organic Options</div>
+                <div className="text-xs text-secondary-500 mt-1">Certified organic</div>
               </div>
             </div>
           </CardContent>
@@ -115,9 +156,11 @@ export default function HomePage() {
             <p className="text-secondary-600 mb-6 max-w-md mx-auto">
               Join the movement towards conscious consumption and help build a more sustainable future.
             </p>
-            <Button size="lg">
-              Get Early Access
-            </Button>
+            <Link href="/auth/signup">
+              <Button size="lg">
+                Get Started Today
+              </Button>
+            </Link>
           </CardContent>
         </Card>
       </section>
