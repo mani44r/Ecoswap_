@@ -1,24 +1,10 @@
 'use client'
 
-import { useState } from 'react'
 import { ProductGrid } from '@/components/product/product-grid'
 import { Card, CardContent } from '@/components/ui/card'
 import { mockProducts } from '@/lib/data/mock-products'
-import { Product } from '@/lib/types/product'
 
 export default function ProductsPage() {
-  const [notification, setNotification] = useState<string | null>(null)
-
-  const handleAddToCart = (product: Product) => {
-    // TODO: Implement actual cart functionality
-    setNotification(`Added "${product.name}" to cart!`)
-    
-    // Clear notification after 3 seconds
-    setTimeout(() => {
-      setNotification(null)
-    }, 3000)
-  }
-
   return (
     <div className="bg-gradient-eco min-h-screen">
       <div className="container py-8">
@@ -63,17 +49,9 @@ export default function ProductsPage() {
           </Card>
         </div>
 
-        {/* Notification */}
-        {notification && (
-          <div className="fixed top-20 right-4 bg-primary-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-in slide-in-from-right">
-            {notification}
-          </div>
-        )}
-
         {/* Product Grid */}
         <ProductGrid
           products={mockProducts}
-          onAddToCart={handleAddToCart}
           title="All Products"
           showFilters={true}
           showSearch={true}

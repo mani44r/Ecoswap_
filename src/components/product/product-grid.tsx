@@ -5,11 +5,11 @@ import { ProductCard } from './product-card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Product, ProductCategory, ProductFilters, ProductSortOption } from '@/lib/types/product'
+import { useCart } from '@/hooks/use-cart'
 import { debounce } from '@/lib/utils'
 
 interface ProductGridProps {
   products: Product[]
-  onAddToCart?: (product: Product) => void
   showFilters?: boolean
   showSearch?: boolean
   title?: string
@@ -18,7 +18,6 @@ interface ProductGridProps {
 
 export function ProductGrid({ 
   products, 
-  onAddToCart, 
   showFilters = true, 
   showSearch = true,
   title,
@@ -27,6 +26,7 @@ export function ProductGrid({
   const [filters, setFilters] = useState<ProductFilters>({})
   const [sortBy, setSortBy] = useState<ProductSortOption>('sustainability-desc')
   const [searchQuery, setSearchQuery] = useState('')
+  const { addToCart } = useCart()
 
   // Debounced search function
   const debouncedSearch = useMemo(
@@ -254,7 +254,7 @@ export function ProductGrid({
             <ProductCard
               key={product.id}
               product={product}
-              onAddToCart={onAddToCart}
+              onAddToCart={addToCart}
             />
           ))}
         </div>
