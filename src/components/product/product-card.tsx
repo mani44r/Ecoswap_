@@ -1,21 +1,31 @@
+import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { RecommendationDialog } from './recommendation-dialog'
 import { Product } from '@/lib/types/product'
 import { formatCurrency, formatCarbonFootprint } from '@/lib/utils'
 
 interface ProductCardProps {
   product: Product
-  onAddToCart?: (product: Product) => void
+  onAddToCart?: (product: Product, isSustainableSwap?: boolean) => void
   showAddToCart?: boolean
 }
 
 export function ProductCard({ product, onAddToCart, showAddToCart = true }: ProductCardProps) {
+  const [showRecommendations, setShowRecommendations] = useState(false)
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    onAddToCart?.(product)
+    
+    // Show recommendations dialog instead of directly adding to cart
+    setShowRecommendations(true)
+  }
+
+  const handleRecommendationChoice = (chosenProduct: Product, isSustainableSwap?: boolean) => {
+    onAddToCart?.(chosenProduct, isSustainableSwap)
   }
 
   const getSustainabilityColor = (score: number) => {
@@ -150,6 +160,14 @@ export function ProductCard({ product, onAddToCart, showAddToCart = true }: Prod
             </Button>
           )}
         </CardFooter>
+
+        {/* Recommendation Dialog */}
+        <RecommendationDialog
+          product={product}
+          isOpen={showRecommendations}
+          onClose={() => setShowRecommendations(false)}
+          onAddToCart={handleRecommendationChoice}
+        />
       </Card>
     </Link>
   )

@@ -11,7 +11,7 @@ interface CartContextType {
   totalPrice: number
   totalCarbonFootprint: number
   potentialEcoCredits: number
-  addToCart: (product: Product, quantity?: number) => void
+  addToCart: (product: Product, quantity?: number, isSustainableSwap?: boolean) => void
   removeFromCart: (productId: string) => void
   updateQuantity: (productId: string, quantity: number) => void
   clearCart: () => void
@@ -78,7 +78,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const calculateCartTotals = (items: CartItem[]) => {
     const totalPrice = items.reduce((sum, item) => sum + (item.product.price * item.quantity), 0)
     const totalCarbonFootprint = items.reduce((sum, item) => sum + (item.product.carbonIntensity * item.quantity), 0)
-    
+
     // Calculate potential eco credits based on sustainability choices
     const potentialEcoCredits = items.reduce((sum, item) => {
       const baseCredits = Math.floor(item.product.sustainabilityScore / 10) * item.quantity
@@ -90,7 +90,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return { totalPrice, totalCarbonFootprint, potentialEcoCredits }
   }
 
-  const addToCart = (product: Product, quantity: number = 1) => {
+  const addToCart = (product: Product, quantity: number = 1, isSustainableSwap: boolean = false) => {
     if (!cart) return
 
     setCart(prevCart => {
@@ -112,7 +112,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           product,
           quantity,
           addedAt: new Date(),
-          isSustainableSwap: false,
+          isSustainableSwap,
         }
         newItems = [...prevCart.items, newItem]
       }

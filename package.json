@@ -12,6 +12,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.7.1",
     "clsx": "^2.0.0",
     "firebase": "^10.7.1",
     "next": "14.2.15",
