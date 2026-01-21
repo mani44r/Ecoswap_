@@ -4,6 +4,14 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { CartItem, Product, ShoppingCart } from '@/lib/types/product'
 import { calculateSustainabilityScore } from '@/lib/utils'
 
+// Import profile hook for gamification integration
+let useProfileHook: any = null
+try {
+  useProfileHook = require('./use-profile').useProfile
+} catch (error) {
+  // Profile hook not available, continue without gamification
+}
+
 interface CartContextType {
   cart: ShoppingCart | null
   items: CartItem[]

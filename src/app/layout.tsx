@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import { SiteHeader } from '@/components/layout/site-header'
 import { AuthProvider } from '@/hooks/use-auth'
 import { CartProvider } from '@/hooks/use-cart'
+import { ProfileProvider } from '@/hooks/use-profile'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -24,14 +25,16 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} min-h-screen bg-secondary-50 antialiased`}>
         <AuthProvider>
-          <CartProvider>
-            <div className="relative flex min-h-screen flex-col">
-              <SiteHeader />
-              <main className="flex-1">
-                {children}
-              </main>
-            </div>
-          </CartProvider>
+          <ProfileProvider>
+            <CartProvider>
+              <div className="relative flex min-h-screen flex-col">
+                <SiteHeader />
+                <main className="flex-1">
+                  {children}
+                </main>
+              </div>
+            </CartProvider>
+          </ProfileProvider>
         </AuthProvider>
       </body>
     </html>
