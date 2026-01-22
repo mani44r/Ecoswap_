@@ -4,6 +4,7 @@ import { useState, useMemo } from 'react'
 import { ProductCard } from './product-card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { ProductCardSkeleton } from '@/components/ui/loading'
 import { Product, ProductCategory, ProductFilters, ProductSortOption } from '@/lib/types/product'
 import { useCart } from '@/hooks/use-cart'
 import { debounce } from '@/lib/utils'
@@ -14,6 +15,7 @@ interface ProductGridProps {
   showSearch?: boolean
   title?: string
   emptyMessage?: string
+  loading?: boolean
 }
 
 export function ProductGrid({ 
@@ -21,7 +23,8 @@ export function ProductGrid({
   showFilters = true, 
   showSearch = true,
   title,
-  emptyMessage = "No products found matching your criteria."
+  emptyMessage = "No products found matching your criteria.",
+  loading = false
 }: ProductGridProps) {
   const [filters, setFilters] = useState<ProductFilters>({})
   const [sortBy, setSortBy] = useState<ProductSortOption>('sustainability-desc')
@@ -248,7 +251,11 @@ export function ProductGrid({
       )}
 
       {/* Product Grid */}
-      {filteredAndSortedProducts.length > 0 ? (
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <ProductCardSkeleton count={8} />
+        </div>
+      ) : filteredAndSortedProducts.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredAndSortedProducts.map(product => (
             <ProductCard
